@@ -50,7 +50,7 @@ export default function CalendarPage({
 }: CalendarPageProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [isCalendarExpanded, setIsCalendarExpanded] = useState(false);
-  const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
+  
 
   const getTaskList = (listId: number) => {
     return taskLists.find(list => list.id === listId);
@@ -204,25 +204,7 @@ export default function CalendarPage({
     return weekDays;
   };
 
-  const handleLongPress = (date: Date, event: React.TouchEvent | React.MouseEvent) => {
-    event.preventDefault();
-    if (onAddTask) {
-      onAddTask(date);
-    }
-  };
-
-  const handleTouchStart = (date: Date) => {
-    const timer = setTimeout(() => {
-      handleLongPress(date, {} as React.TouchEvent);
-    }, 500);
-    setLongPressTimer(timer);
-  };
-
-  const handleTouchEnd = () => {
-    if (longPressTimer) {
-      clearTimeout(longPressTimer);
-    }
-  };
+  
 
   const calendarDays = generateCalendarDays();
   const selectedDateTasks = getSelectedDateTasks();
@@ -310,14 +292,15 @@ export default function CalendarPage({
                   return (
                     <button
                       key={index}
-                      onClick={() => onDateSelect(date)}
-                      onTouchStart={() => handleTouchStart(date)}
-                      onTouchEnd={handleTouchEnd}
-                      onMouseDown={() => handleTouchStart(date)}
-                      onMouseUp={handleTouchEnd}
-                      onMouseLeave={handleTouchEnd}
+                      onClick={() => {
+                        if (date.toDateString() === selectedDate.toDateString()) {
+                          if (onAddTask) onAddTask(date);
+                        } else {
+                          onDateSelect(date);
+                        }
+                      }}
                       className={`
-                        relative p-3 rounded-xl transition-all duration-200 min-h-[60px]
+                        relative p-3 rounded-xl transition-all duration-200 min-h-[60px] flex flex-col items-center justify-center
                         ${isSelected 
                           ? 'bg-white border-2 border-blue-500 text-blue-600 shadow-lg' 
                           : 'hover:bg-gray-100'
@@ -332,20 +315,21 @@ export default function CalendarPage({
                         <span className={`text-sm font-medium ${isSelected ? 'text-blue-600' : ''}`}>
                           {date.getDate()}
                         </span>
-                        {dayTasks.length > 0 && (
-                          <div className="flex flex-wrap gap-0.5 mt-1 justify-center">
-                            {Array.from({ length: Math.min(dayTasks.length, 6) }).map((_, i) => (
+                        <div className="flex flex-wrap gap-0.5 mt-1 justify-center" style={{ minHeight: '10px' }}>
+                          {dayTasks.length > 0 && Array.from({ length: Math.min(dayTasks.length, 6) }).map((_, i) => (
                               <div
                                 key={i}
-                                className={`w-1.5 h-1.5 rounded-full ${
-                                  importantTasks.length > 0 && i === 0
-                                    ? (isSelected ? 'bg-yellow-200' : 'bg-yellow-500')
-                                    : (isSelected ? 'bg-white/70' : 'bg-gray-400')
-                                }`}
+                                style={{
+                                  width: '6px',
+                                  height: '6px',
+                                  borderRadius: '9999px',
+                                  backgroundColor: importantTasks.length > 0 && i === 0 
+                                    ? (isSelected ? '#FDE68A' : '#F59E0B') 
+                                    : (isSelected ? '#BFDBFE' : '#9CA3AF')
+                                }}
                               />
                             ))}
                           </div>
-                        )}
                       </div>
                     </button>
                   );
@@ -426,12 +410,13 @@ export default function CalendarPage({
                       return (
                         <button
                           key={index}
-                          onClick={() => onDateSelect(dayInfo.date)}
-                          onTouchStart={() => handleTouchStart(dayInfo.date)}
-                          onTouchEnd={handleTouchEnd}
-                          onMouseDown={() => handleTouchStart(dayInfo.date)}
-                          onMouseUp={handleTouchEnd}
-                          onMouseLeave={handleTouchEnd}
+                          onClick={() => {
+                            if (dayInfo.date.toDateString() === selectedDate.toDateString()) {
+                              if (onAddTask) onAddTask(dayInfo.date);
+                            } else {
+                              onDateSelect(dayInfo.date);
+                            }
+                          }}
                           className={`
                             relative aspect-square p-1 text-sm rounded-lg transition-all duration-200 min-h-[48px] flex flex-col items-center justify-center
                             ${isSelected 
@@ -443,20 +428,21 @@ export default function CalendarPage({
                           `}
                         >
                           <span className="mb-1">{dayInfo.day}</span>
-                          {dayTasks.length > 0 && (
-                            <div className="flex flex-wrap gap-0.5 justify-center">
-                              {Array.from({ length: Math.min(dayTasks.length, 4) }).map((_, i) => (
+                          <div className="flex flex-wrap gap-0.5 justify-center" style={{ minHeight: '8px' }}>
+                            {dayTasks.length > 0 && Array.from({ length: Math.min(dayTasks.length, 4) }).map((_, i) => (
                                 <div
                                   key={i}
-                                  className={`w-1.5 h-1.5 rounded-full ${
-                                    importantTasks.length > 0 && i === 0
-                                      ? (isSelected ? 'bg-yellow-200' : 'bg-yellow-500')
-                                      : (isSelected ? 'bg-white/70' : 'bg-gray-400')
-                                  }`}
+                                  style={{
+                                    width: '6px',
+                                    height: '6px',
+                                    borderRadius: '9999px',
+                                    backgroundColor: importantTasks.length > 0 && i === 0 
+                                      ? (isSelected ? '#FDE68A' : '#F59E0B') 
+                                      : (isSelected ? '#BFDBFE' : '#9CA3AF')
+                                  }}
                                 />
                               ))}
                             </div>
-                          )}
                         </button>
                       );
                     })}

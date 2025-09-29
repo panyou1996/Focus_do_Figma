@@ -690,9 +690,9 @@ export default function App() {
       <div className="mobile-view-container">
         {/* Main Content with Pull to Refresh */}
         <div className="h-full overflow-y-auto pb-20">
-          <PullToRefresh onRefresh={handleRefresh} disabled={isRefreshing}>
+          {/* <PullToRefresh onRefresh={handleRefresh} disabled={isRefreshing}> */}
             <AnimatePresence mode="wait">{renderCurrentView()}</AnimatePresence>
-          </PullToRefresh>
+          {/* </PullToRefresh> */}
         </div>
 
         {/* Bottom Navigation */}
