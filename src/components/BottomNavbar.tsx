@@ -16,7 +16,7 @@ export default function BottomNavbar({ currentView, onViewChange }: BottomNavbar
   ];
 
   return (
-    <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-100">
+    <div className="bg-white border-t border-gray-100">
       <div className="w-full flex items-center">
         {navItems.map((item) => {
           const isActive = currentView === item.id;

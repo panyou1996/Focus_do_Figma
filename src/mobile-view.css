@@ -1,29 +1,12 @@
-
-body {
-  background-color: #f0f2f5; /* A neutral background color */
-}
-
 .mobile-view-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 100%;
   height: 100%;
-  padding: 2rem;
-  box-sizing: border-box;
 }
 
 .mobile-view-container {
-  width: 393px !important;
-  height: 852px !important;
-  position: relative !important;
-  overflow: hidden !important;
-  background-color: white !important;
-  
-  /* A more subtle shadow and border to represent a modern device */
-  border-radius: 40px !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 8px rgba(0, 0, 0, 0.05) !important;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  width: 100%;
+  height: 100%;
+  position: relative;
 }
 
 /* Force calendar grid layout */

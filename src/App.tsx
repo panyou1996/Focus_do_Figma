@@ -646,7 +646,7 @@ export default function App() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-        <div className="w-full max-w-sm h-[852px] bg-[#ffffff] relative overflow-hidden rounded-[40px] shadow-2xl border-8 border-black">
+        <div className="w-full h-full bg-[#ffffff] relative overflow-hidden">
           <div className="h-full flex items-center justify-center">
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl mx-auto mb-4 flex items-center justify-center">
@@ -686,81 +686,76 @@ export default function App() {
   }
 
   return (
-    <div className="mobile-view-wrapper">
-      <div className="mobile-view-container">
-        {/* Main Content with Pull to Refresh */}
-        <div className="h-full overflow-y-auto pb-20">
-          {/* <PullToRefresh onRefresh={handleRefresh} disabled={isRefreshing}> */}
-            <AnimatePresence mode="wait">{renderCurrentView()}</AnimatePresence>
-          {/* </PullToRefresh> */}
+    <div className="h-dvh w-full bg-gray-50 antialiased">
+      {/* Sync Status Indicator */}
+      {dataService.hasPendingChanges() && (
+        <div className="absolute top-4 left-4 z-10 bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">
+          Sync pending
         </div>
+      )}
 
-        {/* Bottom Navigation */}
-        <div className="absolute bottom-0 left-0 right-0">
+      {/* Main Content Area */}
+      <div className="h-full overflow-y-auto pb-16">
+        <PullToRefresh onRefresh={handleRefresh} disabled={isRefreshing}>
+          <AnimatePresence mode="wait">{renderCurrentView()}</AnimatePresence>
+        </PullToRefresh>
+      </div>
+
+      {/* Bottom Navigation and FAB */}
+      <div className="fixed bottom-0 left-0 right-0">
+        <div className="relative">
           <BottomNavbar
             currentView={viewMode}
             onViewChange={handleViewChange}
           />
-        </div>
-
-        {/* Floating Action Button */}
-        <div className="absolute bottom-20 right-4">
-          <FloatingActionButton onClick={() => setDrawerMode("addTask")} />
-        </div>
-
-        {/* Sync Status Indicator */}
-        {dataService.hasPendingChanges() && (
-          <div className="absolute top-4 left-4 bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">
-            Sync pending
+          <div className="absolute bottom-16 right-4">
+            <FloatingActionButton onClick={() => setDrawerMode("addTask")} />
           </div>
-        )}
-
-        {/* Drawers */}
-        <AnimatePresence>
-          {drawerMode === "taskDetail" && selectedTask && (
-            <TaskDetailDrawer
-              task={selectedTask}
-              taskList={getTaskList(selectedTask.listId)!}
-              onClose={handleCloseDrawer}
-              onUpdate={updateTask}
-              onDelete={deleteTask}
-            />
-          )}
-
-          {drawerMode === "recommended" && (
-            <RecommendedInboxDrawer
-              tasks={getRecommendedTasks()}
-              taskLists={taskLists}
-              onClose={handleCloseDrawer}
-              onTaskClick={handleTaskClick}
-              onToggleCompletion={toggleTaskCompletion}
-              onToggleImportance={toggleTaskImportance}
-            />
-          )}
-
-          {drawerMode === "overdue" && (
-            <OverdueInboxDrawer
-              tasks={getOverdueTasks()}
-              taskLists={taskLists}
-              onClose={handleCloseDrawer}
-              onTaskClick={handleTaskClick}
-              onToggleCompletion={toggleTaskCompletion}
-              onToggleImportance={toggleTaskImportance}
-            />
-          )}
-
-          {drawerMode === "addTask" && (
-            <AddTaskDrawer
-              taskLists={taskLists}
-              initialDueDate={selectedDate}
-              onClose={handleCloseDrawer}
-              onAddTask={addTask}
-            />
-          )}
-        </AnimatePresence>
-
-        <Toaster position="top-center" />
+        </div>
       </div>
+
+      {/* Drawers */}
+      <AnimatePresence>
+        {drawerMode === "taskDetail" && selectedTask && (
+          <TaskDetailDrawer
+            task={selectedTask}
+            taskList={getTaskList(selectedTask.listId)!}
+            onClose={handleCloseDrawer}
+            onUpdate={updateTask}
+            onDelete={deleteTask}
+          />
+        )}
+        {drawerMode === "recommended" && (
+          <RecommendedInboxDrawer
+            tasks={getRecommendedTasks()}
+            taskLists={taskLists}
+            onClose={handleCloseDrawer}
+            onTaskClick={handleTaskClick}
+            onToggleCompletion={toggleTaskCompletion}
+            onToggleImportance={toggleTaskImportance}
+          />
+        )}
+        {drawerMode === "overdue" && (
+          <OverdueInboxDrawer
+            tasks={getOverdueTasks()}
+            taskLists={taskLists}
+            onClose={handleCloseDrawer}
+            onTaskClick={handleTaskClick}
+            onToggleCompletion={toggleTaskCompletion}
+            onToggleImportance={toggleTaskImportance}
+          />
+        )}
+        {drawerMode === "addTask" && (
+          <AddTaskDrawer
+            taskLists={taskLists}
+            initialDueDate={selectedDate}
+            onClose={handleCloseDrawer}
+            onAddTask={addTask}
+          />
+        )}
+      </AnimatePresence>
+
+      <Toaster position="top-center" />
     </div>
   );
 }
