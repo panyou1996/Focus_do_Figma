@@ -17,7 +17,7 @@ export default function BottomNavbar({ currentView, onViewChange }: BottomNavbar
 
   return (
     <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-100">
-      <div className="flex items-center justify-around py-2 px-4">
+      <div className="w-full flex items-center">
         {navItems.map((item) => {
           const isActive = currentView === item.id;
           
@@ -26,8 +26,8 @@ export default function BottomNavbar({ currentView, onViewChange }: BottomNavbar
               key={item.id}
               onClick={() => onViewChange(item.id as any)}
               className={`
-                flex flex-col items-center justify-center py-2 px-3 rounded-lg
-                transition-colors duration-200 min-w-[60px]
+                flex-1 flex flex-col items-center justify-center py-2
+                transition-colors duration-200
                 ${isActive 
                   ? 'text-blue-600' 
                   : 'text-gray-600 hover:text-gray-800'

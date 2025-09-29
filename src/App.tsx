@@ -646,7 +646,7 @@ export default function App() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-        <div className="w-[393px] h-[852px] bg-[#ffffff] relative overflow-hidden rounded-[40px] shadow-2xl border-8 border-black">
+        <div className="w-full max-w-sm h-[852px] bg-[#ffffff] relative overflow-hidden rounded-[40px] shadow-2xl border-8 border-black">
           <div className="h-full flex items-center justify-center">
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl mx-auto mb-4 flex items-center justify-center">
@@ -686,31 +686,27 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      {/* iPhone 16 Container */}
-      <div className="w-[393px] h-[852px] bg-[#ffffff] relative overflow-hidden rounded-[40px] shadow-2xl border-8 border-black">
+    <div className="mobile-view-wrapper">
+      <div className="mobile-view-container">
         {/* Main Content with Pull to Refresh */}
-        <div className="h-full pb-20">
-          <PullToRefresh
-            onRefresh={handleRefresh}
-            disabled={isRefreshing}
-          >
-            <AnimatePresence mode="wait">
-              {renderCurrentView()}
-            </AnimatePresence>
+        <div className="h-full overflow-y-auto pb-20">
+          <PullToRefresh onRefresh={handleRefresh} disabled={isRefreshing}>
+            <AnimatePresence mode="wait">{renderCurrentView()}</AnimatePresence>
           </PullToRefresh>
         </div>
 
         {/* Bottom Navigation */}
-        <BottomNavbar
-          currentView={viewMode}
-          onViewChange={handleViewChange}
-        />
+        <div className="absolute bottom-0 left-0 right-0">
+          <BottomNavbar
+            currentView={viewMode}
+            onViewChange={handleViewChange}
+          />
+        </div>
 
         {/* Floating Action Button */}
-        <FloatingActionButton
-          onClick={() => setDrawerMode("addTask")}
-        />
+        <div className="absolute bottom-20 right-4">
+          <FloatingActionButton onClick={() => setDrawerMode("addTask")} />
+        </div>
 
         {/* Sync Status Indicator */}
         {dataService.hasPendingChanges() && (
@@ -762,9 +758,9 @@ export default function App() {
             />
           )}
         </AnimatePresence>
-      </div>
 
-      <Toaster position="top-center" />
+        <Toaster position="top-center" />
+      </div>
     </div>
   );
 }
